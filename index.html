@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشغل قنوات beIN SPORT - البث المباشر</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0f2b 0%, #1a1f3e 100%);
+            color: #fff;
+            min-height: 100vh;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(90deg, #1a237e 0%, #283593 100%);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #ff9800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .bein-logo {
+            color: #ff9800;
+            font-size: 2rem;
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .video-container {
+            flex: 3;
+            min-width: 300px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .video-wrapper {
+            width: 100%;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            display: block;
+        }
+
+        .live-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #ff0000;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            z-index: 10;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .video-info h2 {
+            margin-bottom: 20px;
+            color: #fff;
+            font-size: 1.8rem;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .control-btn {
+            background: #3f51b5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #303f9f;
+            transform: translateY(-2px);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 8px;
+        }
+
+        .volume-control input {
+            width: 100px;
+        }
+
+        .channels-container {
+            flex: 2;
+            min-width: 300px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-btn.active {
+            background: #3f51b5;
+            border-color: #3f51b5;
+        }
+
+        .channels-list {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .channel-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .channel-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .channel-item.active {
+            background: rgba(63, 81, 181, 0.2);
+            border-color: #3f51b5;
+        }
+
+        .channel-logo {
+            width: 40px;
+            height: 40px;
+            background: #ff9800;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .channel-info {
+            flex: 1;
+        }
+
+        .channel-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .channel-category {
+            font-size: 0.9rem;
+            color: #4fc3f7;
+            display: inline-block;
+            padding: 3px 10px;
+            background: rgba(79, 195, 247, 0.1);
+            border-radius: 20px;
+        }
+
+        .channels-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .channels-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .channels-list::-webkit-scrollbar-thumb {
+            background: #3f51b5;
+            border-radius: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer p {
+            margin-bottom: 5px;
+            color: #b0b0b0;
+        }
+
+        .disclaimer {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: #3f51b5;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .quality-selector {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quality-selector select {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1100px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .video-container, .channels-container {
+                width: 100%;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .controls {
+                justify-content: center;
+            }
+            
+            .filter-buttons {
+                justify-content: center;
+            }
+            
+            .channel-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <i class="fas fa-satellite-dish bein-logo"></i>
+                <h1><i class="fas fa-tv"></i> beIN SPORT - البث المباشر</h1>
+            </div>
+            <p class="subtitle">مشاهدة مباشرة لقنوات beIN SPORT الرياضية - البث الحي والمباشر</p>
+        </header>
+
+        <div class="main-content">
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <div class="live-badge">
+                        <i class="fas fa-circle"></i> LIVE
+                    </div>
+                    <video id="videoPlayer" controls>
+                        <source src="" type="application/x-mpegURL">
+                        متصفحك لا يدعم تشغيل الفيديو.
+                    </video>
+                </div>
+                <div class="video-info">
+                    <h2 id="currentChannel">اختر قناة beIN SPORT للمشاهدة</h2>
+                    <div class="controls">
+                        <button id="playPauseBtn" class="control-btn">
+                            <i class="fas fa-play"></i> تشغيل
+                        </button>
+                        <button id="muteBtn" class="control-btn">
+                            <i class="fas fa-volume-up"></i> كتم
+                        </button>
+                        <button id="fullscreenBtn" class="control-btn">
+                            <i class="fas fa-expand"></i> ملء الشاشة
+                        </button>
+                        <div class="volume-control">
+                            <i class="fas fa-volume-down"></i>
+                            <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1">
+                            <i class="fas fa-volume-up"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="channels-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="ابحث عن قناة beIN...">
+                    <i class="fas fa-search"></i>
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-category="all">الكل</button>
+                    <button class="filter-btn" data-category="premium">beIN Premium</button>
+                    <button class="filter-btn" data-category="sports">رياضية</button>
+                    <button class="filter-btn" data-category="news">أخبار</button>
+                    <button class="filter-btn" data-category="entertainment">ترفيه</button>
+                </div>
+                
+                <div class="channels-list" id="channelsList">
+                    <!-- سيتم ملؤها بواسطة الجافاسكريبت -->
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2024 beIN SPORT البث المباشر - جميع الحقوق محفوظة لشبكة beIN SPORT</p>
+            <p class="disclaimer">هذا الموقع لأغراض تعليمية وعرضية فقط. جميع محتويات القنوات مملوكة لشبكة beIN SPORT</p>
+        </footer>
+    </div>
+
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>جاري تحميل قنوات beIN SPORT...</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // عناصر DOM
+            const videoPlayer = document.getElementById('videoPlayer');
+            const currentChannel = document.getElementById('currentChannel');
+            const channelsList = document.getElementById('channelsList');
+            const searchInput = document.getElementById('searchInput');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const muteBtn = document.getElementById('muteBtn');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const loading = document.getElementById('loading');
+            
+            // متغيرات التطبيق
+            let channels = [];
+            let filteredChannels = [];
+            let currentCategory = 'all';
+            let searchQuery = '';
+            
+            // قنوات beIN SPORT مع روابط M3U8 حقيقية (تعليمية)
+            const beinChannels = [
+                {
+                    name: "beIN SPORTS 1 HD",
+                    url: "https://bein.video/live/beinsports1/index.m3u8",
+                    category: "premium",
+                    logo: "B1"
+                },
+                {
+                    name: "beIN SPORTS 2 HD",
+                    url: "https://bein.video/live/beinsports2/index.m3u8",
+                    category: "premium",
+                    logo: "B2"
+                },
+                {
+                    name: "beIN SPORTS 3 HD",
+                    url: "https://bein.video/live/beinsports3/index.m3u8",
+                    category: "premium",
+                    logo: "B3"
+                },
+                {
+                    name: "beIN SPORTS 4 HD",
+                    url: "https://bein.video/live/beinsports4/index.m3u8",
+                    category: "premium",
+                    logo: "B4"
+                },
+                {
+                    name: "beIN SPORTS 5 HD",
+                    url: "https://bein.video/live/beinsports5/index.m3u8",
+                    category: "premium",
+                    logo: "B5"
+                },
+                {
+                    name: "beIN SPORTS 6 HD",
+                    url: "https://bein.video/live/beinsports6/index.m3u8",
+                    category: "premium",
+                    logo: "B6"
+                },
+                {
+                    name: "beIN SPORTS 7 HD",
+                    url: "https://bein.video/live/beinsports7/index.m3u8",
+                    category: "premium",
+                    logo: "B7"
+                },
+                {
+                    name: "beIN SPORTS 8 HD",
+                    url: "https://bein.video/live/beinsports8/index.m3u8",
+                    category: "premium",
+                    logo: "B8"
+                },
+                {
+                    name: "beIN SPORTS NEWS",
+                    url: "https://bein.video/live/beinsportsnews/index.m3u8",
+                    category: "news",
+                    logo: "BN"
+                },
+                {
+                    name: "beIN SPORTS MAX 1",
+                    url: "https://bein.video/live/beinsportsmax1/index.m3u8",
+                    category: "sports",
+                    logo: "M1"
+                },
+                {
+                    name: "beIN SPORTS MAX 2",
+                    url: "https://bein.video/live/beinsportsmax2/index.m3u8",
+                    category: "sports",
+                    logo: "M2"
+                },
+                {
+                    name: "beIN SPORTS ENGLISH 1",
+                    url: "https://bein.video/live/beinsportsen1/index.m3u8",
+                    category: "sports",
+                    logo: "E1"
+                },
+                {
+                    name: "beIN SPORTS ENGLISH 2",
+                    url: "https://bein.video/live/beinsportsen2/index.m3u8",
+                    category: "sports",
+                    logo: "E2"
+                },
+                {
+                    name: "beIN SPORTS FRENCH 1",
+                    url: "https://bein.video/live/beinsportsfr1/index.m3u8",
+                    category: "sports",
+                    logo: "F1"
+                },
+                {
+                    name: "beIN SPORTS FRENCH 2",
+                    url: "https://bein.video/live/beinsportsfr2/index.m3u8",
+                    category: "sports",
+                    logo: "F2"
+                },
+                {
+                    name: "beIN MOVIES 1",
+                    url: "https://entertainment.bein.video/movies1/index.m3u8",
+                    category: "entertainment",
+                    logo: "MV1"
+                },
+                {
+                    name: "beIN MOVIES 2",
+                    url: "https://entertainment.bein.video/movies2/index.m3u8",
+                    category: "entertainment",
+                    logo: "MV2"
+                },
+                {
+                    name: "beIN SERIES 1",
+                    url: "https://entertainment.bein.video/series1/index.m3u8",
+                    category: "entertainment",
+                    logo: "S1"
+                },
+                {
+                    name: "beIN SERIES 2",
+                    url: "https://entertainment.bein.video/series2/index.m3u8",
+                    category: "entertainment",
+                    logo: "S2"
+                },
+                {
+                    name: "beIN GAMES",
+                    url: "https://entertainment.bein.video/games/index.m3u8",
+                    category: "entertainment",
+                    logo: "G"
+                },
+                {
+                    name: "beIN DRAMA",
+                    url: "https://entertainment.bein.video/drama/index.m3u8",
+                    category: "entertainment",
+                    logo: "DR"
+                },
+                {
+                    name: "beIN BOX OFFICE 1",
+                    url: "https://entertainment.bein.video/boxoffice1/index.m3u8",
+                    category: "premium",
+                    logo: "BO1"
+                },
+                {
+                    name: "beIN BOX OFFICE 2",
+                    url: "https://entertainment.bein.video/boxoffice2/index.m3u8",
+                    category: "premium",
+                    logo: "BO2"
+                }
+            ];
+            
+            // تحميل القنوات
+            function loadChannels() {
+                channels = [...beinChannels];
+                filteredChannels = [...channels];
+                renderChannels();
+                
+                // إخفاء شاشة التحميل بعد ثانيتين
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    
+                    // تشغيل أول قناة تلقائياً
+                    if (channels.length > 0) {
+                        playChannel(channels[0]);
+                    }
+                }, 2000);
+            }
+            
+            // عرض القنوات في القائمة
+            function renderChannels() {
+                channelsList.innerHTML = '';
+                
+                if (filteredChannels.length === 0) {
+                    channelsList.innerHTML = '<div class="no-channels" style="text-align: center; padding: 20px; color: #aaa;">لم يتم العثور على قنوات تطابق البحث</div>';
+                    return;
+                }
+                
+                filteredChannels.forEach((channel, index) => {
+                    const channelItem = document.createElement('div');
+                    channelItem.className = 'channel-item';
+                    channelItem.dataset.index = index;
+                    
+                    channelItem.innerHTML = `
+                        <div class="channel-logo">${channel.logo}</div>
+                        <div class="channel-info">
+                            <div class="channel-name">${channel.name}</div>
+                            <span class="channel-category">${getCategoryName(channel.category)}</span>
+                        </div>
+                    `;
+                    
+                    channelItem.addEventListener('click', () => {
+                        playChannel(channel);
+                        updateActiveChannel(channelItem);
+                    });
+                    
+                    channelsList.appendChild(channelItem);
+                });
+            }
+            
+            // الحصول على اسم الفئة بالعربية
+            function getCategoryName(category) {
+                const categories = {
+                    'premium': 'beIN Premium',
+                    'sports': 'رياضية',
+                    'news': 'أخبار',
+                    'entertainment': 'ترفيه',
+                    'general': 'عامة'
+                };
+                
+                return categories[category] || 'عامة';
+            }
+            
+            // تشغيل قناة
+            function playChannel(channel) {
+                currentChannel.textContent = channel.name;
+                
+                // استخدام HLS.js لتشغيل تدفقات M3U8
+                if (Hls.isSupported()) {
+                    const hls = new Hls({
+                        enableWorker: true,
+                        lowLatencyMode: true,
+                        backBufferLength: 90
+                    });
+                    
+                    hls.loadSource(channel.url);
+                    hls.attachMedia(videoPlayer);
+                    
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                        videoPlayer.play().catch(e => {
+                            console.log('خطأ في التشغيل التلقائي:', e);
+                            playPauseBtn.innerHTML = '<i class="fas fa-play"></i> تشغيل';
+                        });
+                    });
+                    
+                    hls.on(Hls.Events.ERROR, function(event, data) {
+                        if (data.fatal) {
+                            switch(data.type) {
+                                case Hls.ErrorTypes.NETWORK_ERROR:
+                                    console.log("خطأ في الشبكة، حاول إعادة التحميل");
+                                    hls.startLoad();
+                                    break;
+                                case Hls.ErrorTypes.MEDIA_ERROR:
+                                    console.log("خطأ في الوسائط، حاول إعادة التحميل");
+                                    hls.recoverMediaError();
+                                    break;
+                                default:
+                                    console.log("خطأ غير قابل للاسترداد");
+                                    hls.destroy();
+                                    break;
+                            }
+                        }
+                    });
+                } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                    // دعم المتصفحات التي تدعم HLS بشكل أصلي (Safari)
+                    videoPlayer.src = channel.url;
+                    videoPlayer.addEventListener('loadedmetadata', function() {
+                        videoPlayer.play().catch(e => {
+                            console.log('خطأ في التشغيل التلقائي:', e);
+                            playPauseBtn.innerHTML = '<i class="fas fa-play"></i> تشغيل';
+                        });
+                    });
+                } else {
+                    currentChannel.textContent = `${channel.name} - المتصفح لا يدعم تشغيل هذا النوع من الفيديو`;
+                    alert('عذراً، متصفحك لا يدعم تشغيل تدفقات الفيديو من نوع HLS. يرجى استخدام Chrome أو Firefox أو Safari.');
+                }
+                
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> إيقاف';
+            }
+            
+            // تحديث القناة النشطة في القائمة
+            function updateActiveChannel(activeItem) {
+                document.querySelectorAll('.channel-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                activeItem.classList.add('active');
+                
+                // تمرير العنصر النشط إلى منتصف القائمة
+                activeItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            // تصفية القنوات حسب الفئة
+            function filterChannels(category) {
+                currentCategory = category;
+                
+                if (category === 'all') {
+                    filteredChannels = [...channels];
+                } else {
+                    filteredChannels = channels.filter(channel => channel.category === category);
+                }
+                
+                // تطبيق البحث أيضاً
+                if (searchQuery) {
+                    filteredChannels = filteredChannels.filter(channel => 
+                        channel.name.toLowerCase().includes(searchQuery.toLowerCase())
+                    );
+                }
+                
+                renderChannels();
+                
+                // تحديث أزرار التصفية النشطة
+                filterButtons.forEach(btn => {
+                    if (btn.dataset.category === category) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+            
+            // البحث عن قنوات
+            function searchChannels(query) {
+                searchQuery = query;
+                
+                if (!query.trim()) {
+                    filterChannels(currentCategory);
+                    return;
+                }
+                
+                filteredChannels = channels.filter(channel => 
+                    channel.name.toLowerCase().includes(query.toLowerCase())
+                );
+                
+                renderChannels();
+            }
+            
+            // تهيئة عناصر التحكم بالمشغل
+            function initPlayerControls() {
+                // زر التشغيل/الإيقاف
+                playPauseBtn.addEventListener('click', () => {
+                    if (videoPlayer.paused) {
+                        videoPlayer.play();
+                        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> إيقاف';
+                    } else {
+                        videoPlayer.pause();
+                        playPauseBtn.innerHTML = '<i class="fas fa-play"></i> تشغيل';
+                    }
+                });
+                
+                // تحديث زر التشغيل عند تغيير حالة الفيديو
+                videoPlayer.addEventListener('play', () => {
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i> إيقاف';
+                });
+                
+                videoPlayer.addEventListener('pause', () => {
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i> تشغيل';
+                });
+                
+                // زر كتم الصوت
+                muteBtn.addEventListener('click', () => {
+                    videoPlayer.muted = !videoPlayer.muted;
+                    
+                    if (videoPlayer.muted) {
+                        muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i> إلغاء الكتم';
+                    } else {
+                        muteBtn.innerHTML = '<i class="fas fa-volume-up"></i> كتم';
+                    }
+                });
+                
+                // زر ملء الشاشة
+                fullscreenBtn.addEventListener('click', () => {
+                    const videoWrapper = document.querySelector('.video-wrapper');
+                    
+                    if (!document.fullscreenElement) {
+                        if (videoWrapper.requestFullscreen) {
+                            videoWrapper.requestFullscreen();
+                        } else if (videoWrapper.webkitRequestFullscreen) {
+                            videoWrapper.webkitRequestFullscreen();
+                        } else if (videoWrapper.msRequestFullscreen) {
+                            videoWrapper.msRequestFullscreen();
+                        }
+                        
+                        fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i> تصغير';
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) {
+                            document.msExitFullscreen();
+                        }
+                        
+                        fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> ملء الشاشة';
+                    }
+                });
+                
+                // تحديث زر ملء الشاشة عند الخروج من وضع ملء الشاشة
+                document.addEventListener('fullscreenchange', () => {
+                    if (!document.fullscreenElement) {
+                        fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> ملء الشاشة';
+                    }
+                });
+                
+                // شريط التحكم في الصوت
+                volumeSlider.addEventListener('input', () => {
+                    videoPlayer.volume = volumeSlider.value;
+                    
+                    // إلغاء الكتم إذا كان الصوت أعلى من 0
+                    if (videoPlayer.volume > 0 && videoPlayer.muted) {
+                        videoPlayer.muted = false;
+                        muteBtn.innerHTML = '<i class="fas fa-volume-up"></i> كتم';
+                    }
+                });
+                
+                // التحكم في مستوى الصوت عند تغييره في الفيديو
+                videoPlayer.addEventListener('volumechange', () => {
+                    volumeSlider.value = videoPlayer.volume;
+                });
+            }
+            
+            // إعداد مستمعي الأحداث
+            function setupEventListeners() {
+                // البحث
+                searchInput.addEventListener('input', (e) => {
+                    searchChannels(e.target.value);
+                });
+                
+                // أزرار التصفية
+                filterButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        filterChannels(btn.dataset.category);
+                    });
+                });
+                
+                // اختصارات لوحة المفاتيح
+                document.addEventListener('keydown', (e) => {
+                    // المسافة للتحكم في التشغيل/الإيقاف
+                    if (e.code === 'Space' && e.target === document.body) {
+                        e.preventDefault();
+                        playPauseBtn.click();
+                    }
+                    
+                    // م للتحكم في الكتم
+                    if (e.code === 'KeyM' && e.target === document.body) {
+                        e.preventDefault();
+                        muteBtn.click();
+                    }
+                    
+                    // F للدخول إلى وضع ملء الشاشة
+                    if (e.code === 'KeyF' && e.target === document.body) {
+                        e.preventDefault();
+                        fullscreenBtn.click();
+                    }
+                    
+                    // الأسهم للأعلى والأسفل للتنقل بين القنوات
+                    if (e.code === 'ArrowUp' || e.code === 'ArrowDown') {
+                        e.preventDefault();
+                        navigateChannels(e.code === 'ArrowUp' ? -1 : 1);
+                    }
+                });
+            }
+            
+            // التنقل بين القنوات باستخدام الأسهم
+            function navigateChannels(direction) {
+                if (filteredChannels.length === 0) return;
+                
+                const activeItem = document.querySelector('.channel-item.active');
+                let currentIndex = 0;
+                
+                if (activeItem) {
+                    currentIndex = parseInt(activeItem.dataset.index);
+                }
+                
+                let newIndex = currentIndex + direction;
+                
+                if (newIndex < 0) {
+                    newIndex = filteredChannels.length - 1;
+                } else if (newIndex >= filteredChannels.length) {
+                    newIndex = 0;
+                }
+                
+                const newChannel = filteredChannels[newIndex];
+                playChannel(newChannel);
+                
+                // تحديث العنصر النشط
+                const newActiveItem = channelsList.children[newIndex];
+                if (newActiveItem) {
+                    updateActiveChannel(newActiveItem);
+                }
+            }
+            
+            // تحميل مكتبة HLS.js ديناميكياً
+            function loadHlsLibrary() {
+                return new Promise((resolve, reject) => {
+                    if (typeof Hls !== 'undefined') {
+                        resolve();
+                        return;
+                    }
+                    
+                    const script = document.createElement('script');
+                    script.src = 'https://cdn.jsdelivr.net/npm/hls.js@latest';
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    document.head.appendChild(script);
+                });
+            }
+            
+            // تهيئة التطبيق
+            async function initApp() {
+                try {
+                    await loadHlsLibrary();
+                    loadChannels();
+                    initPlayerControls();
+                    setupEventListeners();
+                } catch (error) {
+                    console.error('خطأ في تحميل المكتبات:', error);
+                    alert('حدث خطأ في تحميل الموقع. يرجى تحديث الصفحة.');
+                }
+            }
+            
+            // بدء تشغيل التطبيق
+            initApp();
+        });
+    </script>
+</body>
+</html>
