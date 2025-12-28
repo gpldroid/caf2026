@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0f0f0f">
+    <meta name="description" content="بث مباشر لآلاف القنوات الرياضية وجدول المباريات - Kooralist">
+    <title>Kooralist - بث مباشر وجدول المباريات | جميع القنوات الرياضية</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- HLS Player -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            DEFAULT: '#E50914',
+                            dark: '#B20710',
+                            light: '#FF2D2D'
+                        },
+                        dark: {
+                            DEFAULT: '#0f0f0f',
+                            light: '#1a1a1a',
+                            lighter: '#2a2a2a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* CSS Variables */
+        :root {
+            --safe-area-top: env(safe-area-inset-top, 0px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-area-left: env(safe-area-inset-left, 0px);
+            --safe-area-right: env(safe-area-inset-right, 0px);
+            --header-height: 64px;
+            --primary-color: #E50914;
+            --primary-dark: #B20710;
+            --bg-dark: #0f0f0f;
+            --bg-dark-light: #1a1a1a;
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Modern CSS Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: 'Tajawal', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding: var(--safe-area-top) var(--safe-area-right) var(--safe-area-bottom) var(--safe-area-left);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: color-mix(in srgb, white 5%, transparent);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Container Queries */
+        .container {
+            container-type: inline-size;
+        }
+
+        /* Video Container - Modern Aspect Ratio */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: clamp(6px, 2vw, 12px);
+            overflow: hidden;
+            container-type: size;
+        }
+
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Modern Grid - Using Subgrid */
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+            gap: 1rem;
+        }
+
+        .channels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(clamp(120px, 20vw, 180px), 1fr));
+            gap: clamp(10px, 2vw, 16px);
+        }
+
+        /* Modern Cards with backdrop-filter */
+        .match-card {
+            background: color-mix(in srgb, var(--bg-dark-light) 95%, transparent);
+            backdrop-filter: blur(10px);
+            border-radius: clamp(8px, 2vw, 12px);
+            border: 1px solid color-mix(in srgb, white 8%, transparent);
+            transition: all 0.3s var(--transition-smooth);
+            overflow: hidden;
+        }
+
+        .match-card:hover {
+            transform: translateY(-2px);
+            border-color: color-mix(in srgb, var(--primary-color) 30%, transparent);
+            box-shadow: 0 8px 25px color-mix(in srgb, var(--primary-color) 15%, transparent);
+        }
+
+        .channel-card {
+            background: color-mix(in srgb, white 3%, transparent);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid color-mix(in srgb, white 6%, transparent);
+            transition: all 0.2s ease;
+            position: relative;
+            container-type: inline-size;
+        }
+
+        .channel-card:hover {
+            background: color-mix(in srgb, var(--primary-color) 10%, transparent);
+            border-color: color-mix(in srgb, var(--primary-color) 40%, transparent);
+            transform: scale(1.02);
+        }
+
+        .channel-card.active {
+            background: color-mix(in srgb, var(--primary-color) 15%, transparent);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-color) 20%, transparent);
+        }
+
+        /* Modern Animations with @starting-style */
+        .loader {
+            border: 3px solid color-mix(in srgb, var(--primary-color) 20%, transparent);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Live Indicator with modern animation */
+        .live-indicator {
+            background: linear-gradient(135deg, var(--primary-color), #dc2626);
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Sticky Header with backdrop-filter */
+        .header-container {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: color-mix(in srgb, var(--bg-dark) 95%, transparent);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-block-end: 1px solid color-mix(in srgb, white 10%, transparent);
+            padding-block-start: var(--safe-area-top);
+            min-block-size: var(--header-height);
+        }
+
+        /* Light Mode with color-mix */
+        body.light-mode {
+            --bg-dark: #ffffff;
+            --bg-dark-light: #f9fafb;
+        }
+
+        body.light-mode .header-container {
+            background: color-mix(in srgb, white 95%, transparent);
+            border-block-end-color: color-mix(in srgb, black 10%, transparent);
+        }
+
+        body.light-mode .match-card {
+            background: white;
+            border-color: #e5e7eb;
+            box-shadow: 0 2px 4px color-mix(in srgb, black 5%, transparent);
+        }
+
+        /* Container Queries for responsive cards */
+        @container (max-width: 300px) {
+            .channel-card {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Modern Media Queries with range syntax */
+        @media (width <= 640px) {
+            .matches-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+        }
+
+        @media (width <= 480px) {
+            .channels-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Landscape optimization */
+        @media (orientation: landscape) and (height <= 500px) {
+            .video-wrapper {
+                max-block-size: 70vh;
+            }
+        }
+
+        /* Focus visible for accessibility */
+        :focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .match-card:hover,
+            .channel-card:hover {
+                transform: none;
+            }
+        }
+
+        /* Prefers reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Modern input styles */
+        input, select, textarea {
+            font-size: max(16px, 1rem);
+            accent-color: var(--primary-color);
+        }
+
+        /* Modern image optimization */
+        img {
+            max-inline-size: 100%;
+            block-size: auto;
+            display: block;
+        }
+
+        /* View Transitions API support */
+        @supports (view-transition-name: none) {
+            ::view-transition-old(root),
+            ::view-transition-new(root) {
+                animation-duration: 0.3s;
+            }
+        }
+
+        /* Smooth transition utilities */
+        .smooth-transition {
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        /* Safe area utilities */
+        .safe-area-bottom {
+            padding-block-end: var(--safe-area-bottom);
+        }
+
+        /* Modern has selector for interactive states */
+        button:has(> i) {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+
+<body class="bg-dark text-white min-h-screen">
+
+    <!-- Header -->
+    <header class="header-container">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center justify-between h-16" role="navigation" aria-label="القائمة الرئيسية">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                        <i class="ph ph-soccer-ball text-white text-lg"></i>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <h1 class="text-xl font-bold truncate max-w-[150px] xs:max-w-none">Kooralist</h1>
+                        <p class="text-xs text-gray-400 hidden xs:block">البث المباشر والرياضة</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center gap-4">
+                    <button onclick="scrollToSection('iptv-section')" 
+                            class="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/10 transition smooth-transition"
+                            aria-label="الانتقال إلى البث المباشر">
+                        <i class="ph ph-play-circle" aria-hidden="true"></i>
+                        <span>البث المباشر</span>
+                    </button>
+                    
+                    <button onclick="scrollToSection('matches-section')"
+                            class="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/10 transition smooth-transition"
+                            aria-label="الانتقال إلى جدول المباريات">
+                        <i class="ph ph-calendar" aria-hidden="true"></i>
+                        <span>المباريات</span>
+                    </button>
+                    
+                    <div class="flex items-center gap-2" role="group" aria-label="تبديل المظهر">
+                        <span class="text-sm">مظلم</span>
+                        <button type="button" 
+                                id="themeToggle" 
+                                onclick="toggleTheme()"
+                                class="relative w-12 h-6 bg-gray-700 rounded-full transition-colors duration-300"
+                                aria-label="تبديل المظهر">
+                            <span class="absolute top-1 right-1 w-4 h-4 bg-white rounded-full transform transition-transform duration-300" aria-hidden="true"></span>
+                        </button>
+                        <span class="text-sm">فاتح</span>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" 
+                        class="md:hidden p-2 rounded-lg hover:bg-white/10 transition smooth-transition"
+                        aria-label="فتح القائمة"
+                        aria-expanded="false"
+                        aria-controls="mobileMenu">
+                    <i class="ph ph-list text-xl" aria-hidden="true"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <aside id="mobileMenu" 
+           class="fixed top-16 inset-x-0 bg-dark border-t border-white/10 z-40 hidden max-h-[calc(100vh-64px)] overflow-y-auto"
+           role="dialog"
+           aria-label="القائمة المحمولة">
+        <div class="container mx-auto px-4 py-4 space-y-2">
+            <button onclick="scrollToSection('iptv-section'); toggleMobileMenu()"
+                    class="w-full flex items-center justify-center gap-3 py-3 rounded-lg hover:bg-white/10 transition smooth-transition">
+                <i class="ph ph-play-circle text-lg" aria-hidden="true"></i>
+                <span class="font-medium">البث المباشر</span>
+            </button>
+            <button onclick="scrollToSection('matches-section'); toggleMobileMenu()"
+                    class="w-full flex items-center justify-center gap-3 py-3 rounded-lg hover:bg-white/10 transition smooth-transition">
+                <i class="ph ph-calendar text-lg" aria-hidden="true"></i>
+                <span class="font-medium">المباريات</span>
+            </button>
+            <div class="flex items-center justify-center gap-4 py-4">
+                <span class="font-medium">المظهر</span>
+                <button type="button"
+                        id="themeToggleMobile"
+                        onclick="toggleTheme()"
+                        class="relative w-12 h-6 bg-gray-700 rounded-full transition-colors duration-300"
+                        aria-label="تبديل المظهر">
+                    <span class="absolute top-1 right-1 w-4 h-4 bg-white rounded-full transform transition-transform duration-300" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6 safe-area-bottom">
+        <!-- IPTV Section -->
+        <section id="iptv-section" class="mb-12" aria-labelledby="iptv-heading">
+            <div class="flex flex-col xs:flex-row xs:items-center justify-between gap-3 mb-6">
+                <h2 id="iptv-heading" class="text-2xl font-bold flex items-center gap-3 flex-shrink-0">
+                    <i class="ph ph-television text-primary" aria-hidden="true"></i>
+                    <span class="truncate">البث المباشر - جميع القنوات</span>
+                </h2>
+                <span id="channelCount" 
+                      class="text-sm text-gray-400 bg-dark-lighter px-3 py-1 rounded-full self-start xs:self-auto"
+                      role="status"
+                      aria-live="polite">0 قناة</span>
+            </div>
+
+            <!-- Player -->
+            <div class="video-wrapper mb-6" role="region" aria-label="مشغل الفيديو">
+                <video id="videoPlayer" 
+                       class="w-full" 
+                       controls 
+                       playsinline 
+                       webkit-playsinline
+                       aria-label="مشغل البث المباشر"></video>
+                <div id="playerPlaceholder" 
+                     class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-black/80 to-black">
+                    <i class="ph ph-television text-5xl xs:text-6xl text-gray-400 mb-3 xs:mb-4" aria-hidden="true"></i>
+                    <p class="text-lg xs:text-xl text-gray-300 mb-2 text-center px-4">اختر قناة لبدء المشاهدة</p>
+                    <p class="text-sm text-gray-400 text-center px-4">آلاف القنوات متاحة للبث المباشر</p>
+                </div>
+            </div>
+
+            <!-- Sources Tabs -->
+            <div class="mb-6">
+                <div class="flex flex-wrap gap-2 mb-4" role="tablist" aria-label="تصنيفات القنوات">
+                    <button onclick="loadSource('sports')" 
+                            role="tab"
+                            aria-selected="true"
+                            class="flex-1 min-w-[calc(50%-4px)] xs:flex-none px-3 py-2 xs:px-4 xs:py-2 rounded-lg bg-primary text-white font-medium text-sm xs:text-base">
+                        ⚽ رياضية
+                    </button>
+                    <button onclick="loadSource('entertainment')"
+                            role="tab"
+                            aria-selected="false"
+                            class="flex-1 min-w-[calc(50%-4px)] xs:flex-none px-3 py-2 xs:px-4 xs:py-2 rounded-lg bg-dark-lighter hover:bg-white/10 transition smooth-transition text-sm xs:text-base">
+                        🎬 ترفيهية
+                    </button>
+                    <button onclick="loadSource('news')"
+                            role="tab"
+                            aria-selected="false"
+                            class="flex-1 min-w-[calc(50%-4px)] xs:flex-none px-3 py-2 xs:px-4 xs:py-2 rounded-lg bg-dark-lighter hover:bg-white/10 transition smooth-transition text-sm xs:text-base">
+                        📻 إخبارية
+                    </button>
+                    <button onclick="loadSource('kids')"
+                            role="tab"
+                            aria-selected="false"
+                            class="flex-1 min-w-[calc(50%-4px)] xs:flex-none px-3 py-2 xs:px-4 xs:py-2 rounded-lg bg-dark-lighter hover:bg-white/10 transition smooth-transition text-sm xs:text-base">
+                        🎮 أطفال
+                    </button>
+                    <button onclick="loadSource('all')"
+                            role="tab"
+                            aria-selected="false"
+                            class="flex-1 min-w-[calc(50%-4px)] xs:flex-none px-3 py-2 xs:px-4 xs:py-2 rounded-lg bg-dark-lighter hover:bg-white/10 transition smooth-transition text-sm xs:text-base">
+                        🌍 جميع القنوات
+                    </button>
+                </div>
+
+                <!-- Search and Filter -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+                    <div class="relative">
+                        <i class="ph ph-magnifying-glass absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true"></i>
+                        <input type="search" 
+                               id="channelSearch" 
+                               placeholder="ابحث عن قناة..."
+                               aria-label="البحث عن قناة"
+                               class="w-full bg-dark-lighter border border-white/10 rounded-lg py-3 pr-10 pl-4 focus:outline-none focus:ring-2 focus:ring-primary text-base">
+                    </div>
+                    
+                    <select id="countryFilter" 
+                            aria-label="تصفية حسب الدولة"
+                            class="bg-dark-lighter border border-white/10 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary text-base">
+                        <option value="">جميع الدول</option>
+                    </select>
+                    
+                    <select id="categoryFilter" 
+                            aria-label="تصفية حسب التصنيف"
+                            class="bg-dark-lighter border border-white/10 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary text-base">
+                        <option value="">جميع التصنيفات</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Channels Grid -->
+            <div id="channelsList" 
+                 class="channels-grid"
+                 role="list"
+                 aria-label="قائمة القنوات"></div>
+
+            <!-- Load More -->
+            <div class="text-center mt-6">
+                <button id="loadMoreBtn" 
+                        onclick="loadMoreChannels()"
+                        class="w-full max-w-[300px] px-6 py-3 bg-dark-lighter hover:bg-white/10 rounded-lg font-medium transition smooth-transition">
+                    عرض المزيد من القنوات
+                </button>
+            </div>
+        </section>
+
+        <!-- Matches Section -->
+        <section id="matches-section" class="mb-12" aria-labelledby="matches-heading">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <h2 id="matches-heading" class="text-2xl font-bold flex items-center gap-3">
+                    <i class="ph ph-calendar text-primary" aria-hidden="true"></i>
+                    <span>جدول المباريات</span>
+                </h2>
+                
+                <div class="flex flex-col xs:flex-row gap-3">
+                    <!-- Date Navigation -->
+                    <div class="flex items-center bg-dark-lighter rounded-lg overflow-hidden self-start">
+                        <button onclick="changeDate(-1)" 
+                                aria-label="اليوم السابق"
+                                class="p-3 hover:bg-white/10 transition smooth-transition">
+                            <i class="ph ph-caret-right" aria-hidden="true"></i>
+                        </button>
+                        <input type="date" 
+                               id="datePicker" 
+                               aria-label="اختر التاريخ"
+                               class="bg-transparent px-4 py-2 text-center min-w-[140px] focus:outline-none">
+                        <button onclick="changeDate(1)" 
+                                aria-label="اليوم التالي"
+                                class="p-3 hover:bg-white/10 transition smooth-transition">
+                            <i class="ph ph-caret-left" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Filters -->
+                    <div class="flex flex-col xs:flex-row gap-2">
+                        <select id="leagueFilter" 
+                                aria-label="تصفية حسب البطولة"
+                                class="bg-dark-lighter border border-white/10 rounded-lg px-4 py-2 min-w-[180px] focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option value="all">جميع البطولات</option>
+                        </select>
+                        
+                        <button id="liveMatchesBtn" 
+                                onclick="toggleLiveMatches()"
+                                aria-pressed="false"
+                                class="px-4 py-2 bg-dark-lighter rounded-lg hover:bg-white/10 transition smooth-transition flex items-center justify-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-primary animate-pulse" aria-hidden="true"></span>
+                            مباشر فقط
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Matches Grid -->
+            <div id="matchesContainer" 
+                 class="matches-grid"
+                 role="list"
+                 aria-label="قائمة المباريات"></div>
+
+            <!-- Loading More Matches -->
+            <div class="text-center mt-6">
+                <button id="loadMoreMatchesBtn" 
+                        onclick="loadMoreMatches()"
+                        class="w-full max-w-[300px] px-6 py-3 bg-dark-lighter hover:bg-white/10 rounded-lg font-medium transition smooth-transition">
+                    تحميل مباريات أكثر
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-lighter border-t border-white/10 py-8 safe-area-bottom" role="contentinfo">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <div>
+                    <h3 class="font-bold text-lg mb-3">عن Kooralist</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        منصة رياضية شاملة توفر البث المباشر لألاف القنوات وجدول المباريات لجميع البطولات العالمية والعربية.
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-lg mb-3">البطولات</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition smooth-transition text-sm">الدوري الإنجليزي</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition smooth-transition text-sm">دوري أبطال أوروبا</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition smooth-transition text-sm">الدوري الإسباني</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition smooth-transition text-sm">الدوري السعودي</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-lg mb-3">القنوات</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition smooth-transition text-sm">القنوات الرياضية</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition smooth-transition text-sm">القنوات الإخبارية</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition smooth-transition text-sm">القنوات الترفيهية</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-primary transition smooth-transition text-sm">قنوات الأفلام</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold text-lg mb-3">المصادر</h3>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="https://github.com/iptv-org/iptv" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               class="text-gray-400 hover:text-primary transition smooth-transition text-sm flex items-center gap-2">
+                                <i class="ph ph-github-logo" aria-hidden="true"></i>
+                                IPTV GitHub
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.api-football.com" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               class="text-gray-400 hover:text-primary transition smooth-transition text-sm flex items-center gap-2">
+                                <i class="ph ph-link" aria-hidden="true"></i>
+                                API Football
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-6 border-t border-white/10 text-center">
+                <p class="text-gray-400 text-sm">
+                    © 2024 Kooralist. جميع الحقوق محفوظة. هذا موقع تجريبي.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // استخدم الكود JavaScript الأصلي هنا - نفس الكود السابق
+        // ... (يمكن إضافته كما هو)
+    </script>
+</body>
+</html>
